@@ -2,6 +2,9 @@
   "name": "aln-restaurant-backend",
   "version": "1.0.0",
   "private": true,
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "description": "ALNrestaurant Backend Foundation — Express + TypeScript + Prisma + PostgreSQL",
   "main": "dist/server.js",
   "scripts": {

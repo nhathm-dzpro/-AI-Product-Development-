@@ -1,6 +1,6 @@
-// ALNrestaurant — Prisma foundation (auth phase).
-// Full 10-entity domain (Category, Product, Ingredient, Recipe, Order, ...)
-// lands in the DATABASE phase. Only User is needed for auth foundation.
+// ALNrestaurant — Database Foundation (PRD sections 8 + 13).
+// 10 entities, no extra entity. Money uses Decimal. Status uses enums.
+// IDs use cuid(). FKs + indexes + unique constraints below.
 generator client {
   provider = "prisma-client-js"
 }
@@ -16,12 +16,166 @@ enum Role {
   STAFF
 }
 
+enum ProductStatus {
+  AVAILABLE
+  UNAVAILABLE
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  TRANSFER
+  OTHER
+}
+
+enum InventoryTxType {
+  IMPORT
+  EXPORT
+  ADJUSTMENT
+}
+
 model User {
-  id           String   @id @default(cuid())
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(STAFF)
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([role])
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id           String        @id @default(cuid())
+  categoryId   String
+  category     Category      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   name         String
-  email        String   @unique
-  passwordHash String
-  role         Role     @default(STAFF)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  description  String?
+  sellingPrice Decimal       @db.Decimal(12, 2)
+  imageUrl     String?
+  status       ProductStatus @default(AVAILABLE)
+  recipes      Recipe[]
+  orderItems   OrderItem[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([categoryId])
+  @@index([status])
+}
+
+model Ingredient {
+  id            String                 @id @default(cuid())
+  name          String                 @unique
+  unit          String
+  currentPrice  Decimal                @db.Decimal(12, 2)
+  stockQuantity Decimal                @db.Decimal(12, 3)
+  minimumStock  Decimal                @db.Decimal(12, 3)
+  recipes       Recipe[]
+  transactions  InventoryTransaction[]
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+}
+
+model Recipe {
+  id           String     @id @default(cuid())
+  productId    String
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Restrict)
+  quantity     Decimal    @db.Decimal(12, 3)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([productId, ingredientId])
+  @@index([ingredientId])
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  totalAmount   Decimal       @db.Decimal(12, 2)
+  discount      Decimal       @default(0) @db.Decimal(12, 2)
+  finalAmount   Decimal       @db.Decimal(12, 2)
+  status        OrderStatus   @default(PENDING)
+  paymentMethod PaymentMethod @default(CASH)
+  items         OrderItem[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  quantity  Int
+  unitPrice Decimal @db.Decimal(12, 2)
+  subtotal  Decimal @db.Decimal(12, 2)
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model InventoryTransaction {
+  id           String          @id @default(cuid())
+  ingredientId String
+  ingredient   Ingredient      @relation(fields: [ingredientId], references: [id], onDelete: Restrict)
+  type         InventoryTxType
+  quantity     Decimal         @db.Decimal(12, 3)
+  unitPrice    Decimal?        @db.Decimal(12, 2)
+  totalCost    Decimal?        @db.Decimal(12, 2)
+  createdAt    DateTime        @default(now())
+
+  @@index([ingredientId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  category    String
+  description String?
+  amount      Decimal  @db.Decimal(12, 2)
+  expenseDate DateTime @db.Date
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([expenseDate])
+}
+
+model Supplier {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String?
+  email     String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
 }
