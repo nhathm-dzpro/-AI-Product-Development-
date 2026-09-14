@@ -1,7 +1,7 @@
 import { Router } from 'express';
+import { aiQuery, aiStatus } from './ai.controller.js';
 
 export const aiRoutes = Router();
 
-aiRoutes.get('/', (_req, res) => {
-  res.json({ success: true, data: null, message: 'AI foundation only (no LLM call)' });
-});
+aiRoutes.get('/', aiStatus);
+aiRoutes.post('/query', aiQuery);

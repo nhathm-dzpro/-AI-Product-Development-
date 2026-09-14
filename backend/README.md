@@ -35,7 +35,7 @@ curl http://localhost:5000/api/health
 - `GET /api/auth/me` — `Authorization: Bearer <token>`
 
 Other modules (`/api/users`, `/api/products`, ...) are skeleton routes only.
-AI (`/api/ai`) returns 501 / placeholder — no LLM call.
+AI (`GET /api/ai`, `POST /api/ai/query`) is a placeholder only — no LLM call or database access.
 
 ## Database migration and seed
 
