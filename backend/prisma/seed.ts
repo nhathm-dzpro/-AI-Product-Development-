@@ -38,7 +38,7 @@ async function main(): Promise<void> {
     const categoryId = byName.get(p.category);
     if (!categoryId) throw new Error(`Missing category ${p.category}`);
     await prisma.product.upsert({
-      where: { id: `seed-${p.name}` },
+      where: { categoryId_name: { categoryId, name: p.name } },
       update: {},
       create: { name: p.name, sellingPrice: p.sellingPrice, categoryId },
     });

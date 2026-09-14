@@ -9,7 +9,8 @@ cd backend
 npm install
 cp .env.example .env   # set DATABASE_URL, JWT_SECRET
 npx prisma generate
-npx prisma migrate dev # needs PostgreSQL running
+npx prisma migrate dev --name init_database # needs PostgreSQL running
+npx prisma db seed
 ```
 
 ## Run
@@ -35,3 +36,18 @@ curl http://localhost:5000/api/health
 
 Other modules (`/api/users`, `/api/products`, ...) are skeleton routes only.
 AI (`/api/ai`) returns 501 / placeholder — no LLM call.
+
+## Database migration and seed
+
+From the repository root, start PostgreSQL with Docker Desktop running:
+
+```bash
+docker compose up -d
+cd backend
+copy .env.example .env # PowerShell: Copy-Item .env.example .env
+npx prisma migrate dev
+npx prisma db seed
+npx prisma generate
+```
+
+The initial migration is committed in `prisma/migrations`. The development seed is idempotent and creates one ADMIN user (`admin@aln.local`, password `Admin@123`), three categories, five products, and eight ingredients. Change the development password before using any non-local environment.

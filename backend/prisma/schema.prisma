@@ -8,6 +8,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -79,6 +80,7 @@ model Product {
 
   @@index([categoryId])
   @@index([status])
+  @@unique([categoryId, name])
 }
 
 model Ingredient {
