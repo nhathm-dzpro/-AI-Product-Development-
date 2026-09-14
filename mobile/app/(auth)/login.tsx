@@ -72,7 +72,10 @@ export default function Login() {
               </Button>
             </View>
           </Card>
-          <Link href="/(auth)/register" style={{ textAlign: 'center', marginTop: 16, color: colors.primary }}>
+          <Link
+            href="/(auth)/register"
+            style={{ textAlign: 'center', marginTop: 16, color: colors.primary }}
+          >
             Create account
           </Link>
         </ScrollView>

@@ -12,9 +12,7 @@ type ExpiresIn = NonNullable<SignOptions['expiresIn']>;
 export function signToken(payload: JwtPayload): string {
   const raw: unknown = env.jwtExpiresIn;
   const options: SignOptions =
-    typeof raw === 'string' || typeof raw === 'number'
-      ? { expiresIn: raw as ExpiresIn }
-      : {};
+    typeof raw === 'string' || typeof raw === 'number' ? { expiresIn: raw as ExpiresIn } : {};
   return jwt.sign(payload, env.jwtSecret, options);
 }
 

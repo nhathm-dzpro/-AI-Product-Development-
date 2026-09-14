@@ -23,7 +23,7 @@ async function main(): Promise<void> {
       { name: 'Main', description: 'Main dishes' },
       { name: 'Drinks', description: 'Beverages' },
       { name: 'Dessert', description: 'Desserts' },
-    ].map((c) => prisma.category.upsert({ where: { name: c.name }, update: {}, create: c })),
+    ].map((c) => prisma.category.upsert({ where: { name: c.name }, update: {}, create: c }))
   );
 
   const byName = new Map(categories.map((c) => [c.name, c.id]));

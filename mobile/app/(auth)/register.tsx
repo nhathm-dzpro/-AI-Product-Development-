@@ -17,7 +17,10 @@ const schema = z
     password: z.string().min(6, 'Min 6 characters'),
     confirm: z.string().min(6, 'Min 6 characters'),
   })
-  .refine((v) => v.password === v.confirm, { message: 'Passwords do not match', path: ['confirm'] });
+  .refine((v) => v.password === v.confirm, {
+    message: 'Passwords do not match',
+    path: ['confirm'],
+  });
 
 type Form = z.infer<typeof schema>;
 
@@ -40,15 +43,24 @@ export default function Register() {
         style={{ flex: 1 }}
       >
         <ScrollView contentContainerStyle={{ padding: 20, flexGrow: 1, justifyContent: 'center' }}>
-          <Text style={{ fontSize: 28, fontWeight: '800', color: colors.text }}>Create account</Text>
-          <Text style={{ color: colors.muted, marginTop: 4, marginBottom: 20 }}>Join ALNrestaurant</Text>
+          <Text style={{ fontSize: 28, fontWeight: '800', color: colors.text }}>
+            Create account
+          </Text>
+          <Text style={{ color: colors.muted, marginTop: 4, marginBottom: 20 }}>
+            Join ALNrestaurant
+          </Text>
           <Card>
             <View style={{ gap: 12 }}>
               <Controller
                 control={control}
                 name="name"
                 render={({ field: { onChange, value }, fieldState }) => (
-                  <Input label="Name" value={value} onChangeText={onChange} errorText={fieldState.error?.message} />
+                  <Input
+                    label="Name"
+                    value={value}
+                    onChangeText={onChange}
+                    errorText={fieldState.error?.message}
+                  />
                 )}
               />
               <Controller
@@ -96,7 +108,10 @@ export default function Register() {
               </Button>
             </View>
           </Card>
-          <Link href="/(auth)/login" style={{ textAlign: 'center', marginTop: 16, color: colors.primary }}>
+          <Link
+            href="/(auth)/login"
+            style={{ textAlign: 'center', marginTop: 16, color: colors.primary }}
+          >
             Back to login
           </Link>
         </ScrollView>

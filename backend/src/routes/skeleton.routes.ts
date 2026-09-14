@@ -5,7 +5,11 @@ import { Router } from 'express';
 export function skeleton(module: string): Router {
   const r = Router();
   r.get('/', (_req, res) => {
-    res.json({ success: true, data: [], message: `${module}: foundation only (CRUD in later phase)` });
+    res.json({
+      success: true,
+      data: [],
+      message: `${module}: foundation only (CRUD in later phase)`,
+    });
   });
   return r;
 }

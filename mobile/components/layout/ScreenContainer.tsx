@@ -8,7 +8,12 @@ export function ScreenContainer({ children, style, ...rest }: ViewProps) {
     <View
       {...rest}
       style={[
-        { flex: 1, backgroundColor: colors.background, paddingTop: insets.top, paddingBottom: insets.bottom },
+        {
+          flex: 1,
+          backgroundColor: colors.background,
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+        },
         style,
       ]}
     >

@@ -23,5 +23,5 @@ api.interceptors.response.use(
   (error) => {
     const message = error?.response?.data?.message ?? error?.message ?? 'Request failed';
     return Promise.reject(new Error(message));
-  },
+  }
 );

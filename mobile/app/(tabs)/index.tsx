@@ -21,7 +21,9 @@ export default function Home() {
         right={<Avatar.Text size={40} label={(user?.name ?? 'A').slice(0, 1).toUpperCase()} />}
       />
       <ScrollView contentContainerStyle={{ padding: 16, gap: 16 }}>
-        <Text style={{ fontSize: 16, fontWeight: '700', color: colors.text }}>Today&apos;s Overview</Text>
+        <Text style={{ fontSize: 16, fontWeight: '700', color: colors.text }}>
+          Today&apos;s Overview
+        </Text>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
           <StatCard label="Revenue" value={formatVND(OVERVIEW_MOCK.revenue)} />
           <StatCard label="Orders" value={String(OVERVIEW_MOCK.orders)} />

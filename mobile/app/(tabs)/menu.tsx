@@ -13,12 +13,25 @@ export default function Menu() {
   const [cat, setCat] = useState('All');
   const cats = ['All', ...MOCK_CATEGORIES.map((c) => c.name)];
   const idOf = (name: string) => MOCK_CATEGORIES.find((c) => c.name === name)?.id;
-  const data = cat === 'All' ? MOCK_PRODUCTS : MOCK_PRODUCTS.filter((p) => p.categoryId === idOf(cat));
+  const data =
+    cat === 'All' ? MOCK_PRODUCTS : MOCK_PRODUCTS.filter((p) => p.categoryId === idOf(cat));
 
   return (
     <ScreenContainer>
-      <Header title="Menu" subtitle="Categories + products (mock)" right={<Button compact>Add Product</Button>} />
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, paddingHorizontal: 16, marginBottom: 8 }}>
+      <Header
+        title="Menu"
+        subtitle="Categories + products (mock)"
+        right={<Button compact>Add Product</Button>}
+      />
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: 8,
+          paddingHorizontal: 16,
+          marginBottom: 8,
+        }}
+      >
         {cats.map((c) => (
           <Chip key={c} selected={cat === c} onPress={() => setCat(c)}>
             {c}
@@ -35,7 +48,9 @@ export default function Menu() {
           <Card style={{ flex: 1, marginBottom: 12 }}>
             <Text style={{ fontWeight: '700', color: colors.text }}>{item.name}</Text>
             <Text style={{ color: colors.muted }}>{formatVND(item.price)}</Text>
-            <Text style={{ color: item.isAvailable ? colors.success : colors.danger, marginTop: 4 }}>
+            <Text
+              style={{ color: item.isAvailable ? colors.success : colors.danger, marginTop: 4 }}
+            >
               {item.isAvailable ? 'Available' : 'Unavailable'}
             </Text>
           </Card>
