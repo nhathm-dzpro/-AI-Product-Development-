@@ -1,0 +1,129 @@
+# ALNrestaurant
+
+## Product Overview
+
+ALNrestaurant is a mobile-first restaurant-management source base. It provides the project structure, navigation, REST API foundation, PostgreSQL schema, development seed, and AI Copilot extension points required for later phases.
+
+## Features
+
+- Expo Router mobile shell with mock authentication and six protected tabs.
+- Express API with health check, response/error middleware, authentication foundation, and module route placeholders.
+- Prisma/PostgreSQL schema for users, menu, recipes, orders, inventory, expenses, and suppliers.
+- Docker Compose PostgreSQL service and idempotent development seed.
+- AI Restaurant Copilot architecture placeholders with controlled-tool boundaries; no AI provider is configured.
+
+## Architecture
+
+```text
+Mobile
+  ↓
+REST API
+  ↓
+Node.js / Express
+  ↓
+Prisma
+  ↓
+PostgreSQL
+```
+
+Mobile clients communicate with the backend API. They never connect to PostgreSQL directly. Future AI orchestration must use controlled backend tools rather than exposing database credentials or direct database access.
+
+## Tech Stack
+
+| Area     | Technology                                                   |
+| -------- | ------------------------------------------------------------ |
+| Mobile   | Expo, React Native, TypeScript, Expo Router                  |
+| Backend  | Node.js, Express, TypeScript, Zod, JWT, bcrypt               |
+| Database | PostgreSQL, Prisma                                           |
+| AI       | Architecture placeholders only; no provider SDK or API calls |
+
+## Requirements
+
+- Node.js 22.13+ for Expo SDK 57
+- npm
+- Docker Desktop (for local PostgreSQL)
+- Expo Go for running on a physical Android or iOS device
+
+## Installation
+
+```powershell
+git clone <repository-url>
+cd ALNrestaurant
+
+cd backend
+npm install
+Copy-Item .env.example .env
+
+cd ..\mobile
+npm install
+Copy-Item .env.example .env
+```
+
+Never commit either `.env` file. Replace the example `JWT_SECRET` before using any environment outside local development.
+
+## Database Setup
+
+From the project root:
+
+```powershell
+docker compose up -d
+cd backend
+npx prisma migrate dev
+npx prisma db seed
+npx prisma generate
+```
+
+The development seed creates one bcrypt-hashed admin user, three categories, five products, and eight ingredients. The initial migration is in `backend/prisma/migrations`.
+
+## Run Backend
+
+```powershell
+cd backend
+npm run dev
+```
+
+Verify it at `GET http://localhost:5000/api/health`:
+
+```json
+{ "success": true, "message": "ALNrestaurant API is running" }
+```
+
+## Run Mobile
+
+```powershell
+cd mobile
+npx expo start
+```
+
+Use Expo Go to scan the QR code, or select an emulator/web target in Expo CLI.
+
+## Physical Device
+
+`localhost` on a phone means the phone itself, not the development machine. For Expo Go on the same LAN, set `mobile/.env` to your development machine's LAN IP:
+
+```dotenv
+EXPO_PUBLIC_API_URL=http://192.168.x.x:5000/api
+```
+
+Do not hard-code this value in components; it is read from the environment in `mobile/constants/index.ts`.
+
+## Project Structure
+
+```text
+mobile/          Expo app, Expo Router navigation, mock UI foundation
+backend/         Express API, Prisma schema/seed/migrations, AI architecture
+backend/prisma/  PostgreSQL schema, migration history, development seed
+docs/            Product requirements and project documentation
+```
+
+## Current Scope
+
+This repository is a source base only. Authentication is a foundation, module routes are placeholders, mobile screens use mock data, and the AI Copilot does not call a provider or calculate business metrics.
+
+## Future Phases
+
+- Production authentication and account management
+- CRUD APIs and backend-connected mobile data
+- Inventory, recipe-cost, profit, and revenue calculations
+- Controlled AI Copilot orchestration
+- Notifications, payment workflows, barcode/camera features, and table management

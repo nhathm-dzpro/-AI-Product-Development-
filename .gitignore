@@ -1,0 +1,29 @@
+# Dependencies and generated output
+node_modules/
+dist/
+build/
+coverage/
+
+# Local environment and Expo state
+.env
+.env.*
+!.env.example
+.expo/
+web-build/
+
+# Logs
+*.log
+npm-debug.*
+yarn-debug.*
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# TypeScript and native generated files
+*.tsbuildinfo
+mobile/ios/
+mobile/android/
