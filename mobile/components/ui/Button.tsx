@@ -7,7 +7,8 @@ type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ButtonProps {
-  label: string;
+  label?: string;
+  children?: React.ReactNode;
   onPress: () => void;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -20,6 +21,7 @@ interface ButtonProps {
 
 export function Button({
   label,
+  children,
   onPress,
   variant = 'primary',
   size = 'md',
@@ -31,6 +33,7 @@ export function Button({
 }: ButtonProps) {
   const variantStyle = variantStyles[variant];
   const sizeStyle = sizeStyles[size];
+  const buttonText = label ?? (typeof children === 'string' ? children : null);
 
   return (
     <TouchableOpacity
@@ -51,7 +54,7 @@ export function Button({
       ) : (
         <>
           {icon ? <Ionicons name={icon} size={sizeStyle.iconSize} color={variantStyle.textColor} style={styles.icon} /> : null}
-          <Text style={[styles.label, variantStyle.text, sizeStyle.text]}>{label}</Text>
+          {buttonText ? <Text style={[styles.label, variantStyle.text, sizeStyle.text]}>{buttonText}</Text> : children}
         </>
       )}
     </TouchableOpacity>

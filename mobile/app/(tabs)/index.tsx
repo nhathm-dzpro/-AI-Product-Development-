@@ -28,7 +28,7 @@ const quickActions = [
 
 export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
-  const [activeBarIndex, setActiveBarIndex] = useState(6);
+  const [activeBarIndex] = useState(6);
 
   const onRefresh = () => {
     setRefreshing(true);

@@ -6,7 +6,7 @@ import { Card } from '../../components/ui/Card';
 import { BarChart } from '~/components/charts/BarChart';
 import { LineChart } from '~/components/charts/LineChart';
 import { Colors } from '~/constants/Colors';
-import { revenueData, topProducts, formatCompactCurrency, formatCurrency } from '~/data/mockData';
+import { revenueData, topProducts, formatCompactCurrency } from '~/data/mockData';
 
 const FILTERS = ['7 ngày', '30 ngày', '3 tháng', '1 năm'];
 

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput,
   KeyboardAvoidingView, Platform, ActivityIndicator,
@@ -57,7 +57,7 @@ const generateAIResponse = (question: string): string => {
 
 export default function AICopilotScreen() {
   const insets = useSafeAreaInsets();
-  const [messages, setMessages] = useState<ChatMessage[]>([
+  const [messages, setMessages] = useState<ChatMessage[]>(() => [
     {
       id: '0',
       role: 'ai',
@@ -67,9 +67,9 @@ export default function AICopilotScreen() {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<any>(null);
 
-  const sendMessage = (text: string) => {
+  const sendMessage = useCallback((text: string) => {
     if (!text.trim()) return;
 
     const userMsg: ChatMessage = {
@@ -94,7 +94,7 @@ export default function AICopilotScreen() {
       setIsTyping(false);
       setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
     }, 1200);
-  };
+  }, []);
 
   const renderMessage = (msg: ChatMessage) => {
     const isUser = msg.role === 'user';

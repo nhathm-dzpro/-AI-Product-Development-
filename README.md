@@ -2,47 +2,51 @@
 
 ## Product Overview
 
-ALNrestaurant is a mobile-first restaurant-management source base. It provides the project structure, navigation, REST API foundation, PostgreSQL schema, development seed, and AI Copilot extension points required for later phases.
+ALNrestaurant is a mobile-first restaurant-management source base with web preview capability. It provides the project structure, navigation, REST API foundation, PostgreSQL schema, development seed, and AI Restaurant Copilot.
+
+- 📄 **PRD Document:** [docs/PRODUCT_REQUIREMENTS.md](docs/PRODUCT_REQUIREMENTS.md)
 
 ## Features
 
-- Expo Router mobile shell with mock authentication and six protected tabs.
-- Express API with health check, response/error middleware, authentication foundation, and module route placeholders.
-- Prisma/PostgreSQL schema for users, menu, recipes, orders, inventory, expenses, and suppliers.
-- Docker Compose PostgreSQL service and idempotent development seed.
-- AI Restaurant Copilot architecture placeholders with controlled-tool boundaries; no AI provider is configured.
+- **Expo SDK 58 & React Native 0.88**: Upgraded for full compatibility with modern Expo Go mobile apps.
+- **Expo Router Navigation**: Clean file-based routing with mock authentication, six protected tabs, and dedicated AI Copilot screen.
+- **Rich Mobile UI & Charts**: Complete dashboard, interactive custom SVG charts (BarChart, LineChart), order cards, colored inventory alert badges, and restaurant mock data.
+- **AI Restaurant Copilot Screen**: Interactive chat UI with automated business insights, suggested questions, and sales analysis (`mobile/app/ai-copilot.tsx`).
+- **Web Preview**: Run directly in desktop browsers with `npm run web` powered by `react-native-web`.
+- **Express API**: Health check, response/error middleware, authentication foundation (JWT + bcrypt), and module route placeholders.
+- **Prisma & PostgreSQL**: 10 normalized entities schema (Users, Menu, Recipes, Orders, OrderItems, Inventory, Transactions, Expenses, Suppliers) with Supabase Cloud connection or local Docker fallback.
+- **AI Backend Architecture**: Controlled tool boundaries (`inventory`, `product`, `profit`, `sales`) ready for future LLM integration.
 
 ## Architecture
 
 ```text
-Mobile
+Mobile / Web (Expo SDK 58)
   ↓
-REST API
+REST API (Express + TypeScript)
   ↓
-Node.js / Express
+Prisma ORM
   ↓
-Prisma
-  ↓
-PostgreSQL
+PostgreSQL (Supabase Cloud / Docker local)
 ```
 
-Mobile clients communicate with the backend API. They never connect to PostgreSQL directly. Future AI orchestration must use controlled backend tools rather than exposing database credentials or direct database access.
+Mobile clients communicate exclusively with the backend API; they never connect to PostgreSQL directly. AI orchestration operates through controlled backend tools.
 
 ## Tech Stack
 
 | Area     | Technology                                                   |
 | -------- | ------------------------------------------------------------ |
-| Mobile   | Expo, React Native, TypeScript, Expo Router                  |
+| Mobile   | Expo SDK 58, React Native 0.88, React 19.3, TypeScript, Expo Router, React Native SVG |
+| Web      | React Native Web, React DOM 19.3                             |
 | Backend  | Node.js, Express, TypeScript, Zod, JWT, bcrypt               |
-| Database | PostgreSQL, Prisma                                           |
-| AI       | Architecture placeholders only; no provider SDK or API calls |
+| Database | PostgreSQL, Prisma ORM (Supabase Cloud / Local Docker)       |
+| AI       | Interactive mobile chat UI & controlled backend tool stubs   |
 
 ## Requirements
 
-- Node.js 22.13+ for Expo SDK 57
+- Node.js 20+ / 22+
 - npm
-- Docker Desktop (for local PostgreSQL)
-- Expo Go for running on a physical Android or iOS device
+- Expo Go (SDK 58 compatible) for physical Android / iOS testing
+- (Optional) Docker Desktop for local PostgreSQL if not using Supabase
 
 ## Installation
 
@@ -50,30 +54,19 @@ Mobile clients communicate with the backend API. They never connect to PostgreSQ
 git clone <repository-url>
 cd ALNrestaurant
 
+# 1. Setup Backend
 cd backend
 npm install
 Copy-Item .env.example .env
 
+# 2. Setup Mobile
 cd ..\mobile
-npm install
+npm install --legacy-peer-deps
 Copy-Item .env.example .env
 ```
 
-Never commit either `.env` file. Replace the example `JWT_SECRET` before using any environment outside local development.
-
-## Database Setup
-
-From the project root:
-
-```powershell
-docker compose up -d
-cd backend
-npx prisma migrate dev
-npx prisma db seed
-npx prisma generate
-```
-
-The development seed creates one bcrypt-hashed admin user, three categories, five products, and eight ingredients. The initial migration is in `backend/prisma/migrations`.
+> [!NOTE]
+> Set `EXPO_PUBLIC_API_URL` in `mobile/.env` to your development machine's local Wi-Fi IP (e.g. `http://192.168.1.14:5000/api`) so physical phones can reach the backend.
 
 ## Run Backend
 
@@ -82,48 +75,44 @@ cd backend
 npm run dev
 ```
 
-Verify it at `GET http://localhost:5000/api/health`:
-
+Verify at `GET http://localhost:5000/api/health`:
 ```json
 { "success": true, "message": "ALNrestaurant API is running" }
 ```
 
-## Run Mobile
+## Run Mobile / Web
 
+### Physical Device (Expo Go)
 ```powershell
 cd mobile
-npx expo start
+npx expo start -c
 ```
+Scan the generated QR code using the **Expo Go** app on Android or Camera app on iOS.
 
-Use Expo Go to scan the QR code, or select an emulator/web target in Expo CLI.
-
-## Physical Device
-
-`localhost` on a phone means the phone itself, not the development machine. For Expo Go on the same LAN, set `mobile/.env` to your development machine's LAN IP:
-
-```dotenv
-EXPO_PUBLIC_API_URL=http://192.168.x.x:5000/api
+### Web Browser (Desktop)
+```powershell
+cd mobile
+npm run web
 ```
-
-Do not hard-code this value in components; it is read from the environment in `mobile/constants/index.ts`.
+Opens the application directly in your default browser at `http://localhost:8081`.
 
 ## Project Structure
 
 ```text
-mobile/          Expo app, Expo Router navigation, mock UI foundation
-backend/         Express API, Prisma schema/seed/migrations, AI architecture
-backend/prisma/  PostgreSQL schema, migration history, development seed
-docs/            Product requirements and project documentation
+mobile/             Expo mobile & web application (SDK 58, Expo Router)
+mobile/app/         File-based routes: (auth), (tabs), ai-copilot.tsx
+mobile/components/  UI components, charts (BarChart, LineChart), cards
+mobile/data/        F&B mock business data (products, orders, revenue)
+mobile-backup/      Pre-merge archive backup of the initial source base
+backend/            Express API, Prisma schema/seed/migrations, AI architecture
+backend/prisma/     PostgreSQL schema, migration history, development seed
+docs/               Product Requirements Document ([PRD](docs/PRODUCT_REQUIREMENTS.md)) and documentation
 ```
 
-## Current Scope
+## Quality & Verification
 
-This repository is a source base only. Authentication is a foundation, module routes are placeholders, mobile screens use mock data, and the AI Copilot does not call a provider or calculate business metrics.
-
-## Future Phases
-
-- Production authentication and account management
-- CRUD APIs and backend-connected mobile data
-- Inventory, recipe-cost, profit, and revenue calculations
-- Controlled AI Copilot orchestration
-- Notifications, payment workflows, barcode/camera features, and table management
+Both projects are strictly typed and linted:
+```powershell
+cd mobile && npm run typecheck && npx eslint .
+cd ../backend && npm run typecheck
+```

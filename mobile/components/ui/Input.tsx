@@ -6,15 +6,17 @@ import { Colors } from '~/constants/Colors';
 interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
+  errorText?: string;
   icon?: keyof typeof Ionicons.glyphMap;
   rightIcon?: keyof typeof Ionicons.glyphMap;
   onRightIconPress?: () => void;
   hint?: string;
 }
 
-export function Input({ label, error, icon, rightIcon, onRightIconPress, hint, style, secureTextEntry, ...props }: InputProps) {
+export function Input({ label, error, errorText, icon, rightIcon, onRightIconPress, hint, style, secureTextEntry, ...props }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [isSecure, setIsSecure] = useState(secureTextEntry);
+  const displayError = error ?? errorText;
 
   return (
     <View style={styles.wrapper}>
@@ -22,7 +24,7 @@ export function Input({ label, error, icon, rightIcon, onRightIconPress, hint, s
       <View style={[
         styles.inputContainer,
         isFocused && styles.focused,
-        error ? styles.error : null,
+        displayError ? styles.error : null,
       ]}>
         {icon ? <Ionicons name={icon} size={18} color={isFocused ? Colors.primary : Colors.textSecondary} style={styles.leftIcon} /> : null}
         <TextInput
@@ -43,8 +45,8 @@ export function Input({ label, error, icon, rightIcon, onRightIconPress, hint, s
           </TouchableOpacity>
         ) : null}
       </View>
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
-      {hint && !error ? <Text style={styles.hint}>{hint}</Text> : null}
+      {displayError ? <Text style={styles.errorText}>{displayError}</Text> : null}
+      {hint && !displayError ? <Text style={styles.hint}>{hint}</Text> : null}
     </View>
   );
 }
