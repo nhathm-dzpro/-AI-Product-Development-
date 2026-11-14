@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {
-  View, Text, ScrollView, StyleSheet, TouchableOpacity, Modal, Alert,
+  View, Text, ScrollView, StyleSheet, TouchableOpacity, Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Header } from '~/components/Header';
@@ -8,7 +8,6 @@ import { SearchBar } from '~/components/SearchBar';
 import { InventoryCard } from '~/components/InventoryCard';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { Badge } from '~/components/Badge';
 import { Colors } from '~/constants/Colors';
 import { inventoryItems, InventoryItem } from '~/data/mockData';
 
@@ -26,7 +25,7 @@ export default function InventoryScreen() {
   const [activeStatus, setActiveStatus] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
-  const [items, setItems] = useState(inventoryItems);
+  const [items] = useState(inventoryItems);
 
   const filtered = useMemo(() => {
     return items.filter((item) => {
